@@ -1,20 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
+import { Provider } from 'react-redux';
+import MainForm from './page/MainForm';
+import store from './store/configureStore';
+import { customStyles } from './style/baseStyles';
+import LoadSettingForm from './function/LoadSettingForm';
+import { useState } from 'react';
 
 export default function App() {
+  const [loadSetting, setLoadSetting] = useState(false);
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <View style={customStyles.mainScreen.container}>
+        {
+          (!loadSetting)
+            ? (
+              <LoadSettingForm
+                setLoadSetting={setLoadSetting}
+              />
+            )
+            : (
+              <MainForm />
+            )
+        }
+        <StatusBar style="auto" />
+      </View>
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
