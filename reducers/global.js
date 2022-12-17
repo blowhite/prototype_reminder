@@ -2,26 +2,21 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const name = 'global';
 const initialState = {
-  checkStatus: {
-    dataBase: false,
-  }
+  scheduleItem: [],
 };
 
 const globalSlice = createSlice({
   name,
   initialState,
   reducers: {
-    setCheckStatusDB(state) {
-      state.checkStatus.dataBase = true;
-    },
-    setCheckAgain(state) {
-      state.checkStatus.dataBase = false;
+    setAddSchduleItem(state, action) {
+      state.scheduleItem.push(action.payload);
     }
   }
 });
 
 export const {
-  setCheckStatusDB, setCheckAgain,
+  setAddSchduleItem
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

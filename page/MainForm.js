@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -6,7 +6,8 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import Menu1 from './menus/Menu1';
 import Menu2 from './menus/Menu2';
-import Menu3 from './menus/Menu3';
+import SettingForm from './menus/SettingForm';
+import ScheduleForm from './menus/ScheduleForm';
 
 const MainForm = () => {
   const Tab = createBottomTabNavigator();
@@ -29,22 +30,22 @@ const MainForm = () => {
             }}
           /> 
           <Tab.Screen
-            name="page2"
-            component={Menu2} 
+            name="schedule"
+            component={ScheduleForm} 
             options={{
               tabBarActiveTintColor: '#ff9900',
-              title: '페이지2',
+              title: '일정',
               tabBarIcon: ({ color }) => (
-                <Ionicons name="school" size={30} color={color}/>
+                <Ionicons name="calendar" size={30} color={color}/>
               )
             }}
           /> 
           <Tab.Screen
-            name="page3"
-            component={Menu3} 
+            name="setting"
+            component={SettingForm} 
             options={{
               tabBarActiveTintColor: '#ff9900',
-              title: '페이지3',
+              title: '설정',
               tabBarIcon: ({ color }) => (
                 <Ionicons name="settings" size={30} color={color}/>
               )
