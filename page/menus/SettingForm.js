@@ -1,10 +1,12 @@
 import React, { useCallback, useMemo } from 'react';
-import { Button, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 
 import { checkTableList } from '../../function/database/tableList/checkTableList';
 import initDatabaseConfig from '../../function/database/InitDataBase';
+import { useSelector } from 'react-redux';
 
 const SettingForm = () => {
+  const { scheduleItem } = useSelector((state) => state.global);
   const localDB = useMemo(() => (initDatabaseConfig()), []);
   const executeTable = useCallback((v) => {
     localDB.transaction(tx => {
@@ -27,6 +29,9 @@ const SettingForm = () => {
         title='체크초기화'
         onPress={dropExecute}
       />
+      <Text>
+        등록된 레코드: {scheduleItem.length}
+      </Text>
     </View>
   );
 };

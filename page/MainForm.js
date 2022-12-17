@@ -1,11 +1,10 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Button, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
 import Menu1 from './menus/Menu1';
-import Menu2 from './menus/Menu2';
 import SettingForm from './menus/SettingForm';
 import ScheduleForm from './menus/ScheduleForm';
 
@@ -37,7 +36,14 @@ const MainForm = () => {
               title: '일정',
               tabBarIcon: ({ color }) => (
                 <Ionicons name="calendar" size={30} color={color}/>
-              )
+              ),
+              headerRight: () => (
+                <Button
+                  onPress={() => alert('This is a button!')}
+                  title="Info"
+                  // color="#fff"
+                />
+              ),
             }}
           /> 
           <Tab.Screen
