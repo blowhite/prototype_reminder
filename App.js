@@ -6,11 +6,17 @@ import store from './store/configureStore';
 import { customStyles } from './style/baseStyles';
 import LoadSettingForm from './function/LoadSettingForm';
 import { useState } from 'react';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 export default function App() {
   const [loadSetting, setLoadSetting] = useState(false);
+  const statusBarHeight = getStatusBarHeight();
   return (
     <Provider store={store}>
+      <View style={{
+        height: statusBarHeight,
+        backgroundColor: '#506bbb'
+      }} />
       <View style={customStyles.mainScreen.container}>
         {
           (!loadSetting)

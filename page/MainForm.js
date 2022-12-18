@@ -22,7 +22,7 @@ const MainForm = () => {
             component={Menu1} 
             options={{
               tabBarActiveTintColor: '#ff9900',
-              title: '페이지1',
+              title: '메인화면',
               tabBarIcon: ({ color }) => (
                 <Ionicons name="home" size={30} color={color}/>
               )

@@ -12,13 +12,11 @@ const InsertItemForm = ({ itemProps, setItemProps }) => {
   const filteredList = useMemo(() => (
     scheduleItem.filter((v) => v.schd_from_time === itemProps.focusDate)
   ), [scheduleItem, itemProps]);
-  console.log(filteredList);
   const [inputValue, setInputValue] = useState('');
   const inputTitle = useCallback((e) => {
     setInputValue(e);
   }, []);
   const sendDataBase = useCallback(() => {
-    console.log('button Click');
     if (inputValue) {
       dispatch(setAddSchduleItem({
         schd_title: inputValue,

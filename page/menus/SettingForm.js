@@ -3,9 +3,11 @@ import { Button, Text, View } from 'react-native';
 
 import { checkTableList } from '../../function/database/tableList/checkTableList';
 import initDatabaseConfig from '../../function/database/InitDataBase';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setClearSchduleItem } from '../../reducers/global';
 
 const SettingForm = () => {
+  const dispatch = useDispatch();
   const { scheduleItem } = useSelector((state) => state.global);
   const localDB = useMemo(() => (initDatabaseConfig()), []);
   const executeTable = useCallback((v) => {
@@ -23,11 +25,18 @@ const SettingForm = () => {
       executeTable(v);
     });
   }, []);
+  const clearItems = useCallback(() => {
+    dispatch(setClearSchduleItem());
+  }, []);
   return (
     <View>
       <Button
-        title='체크초기화'
+        title='DB초기화'
         onPress={dropExecute}
+      />
+      <Button
+        title='아이템초기화'
+        onPress={clearItems}
       />
       <Text>
         등록된 레코드: {scheduleItem.length}

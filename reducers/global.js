@@ -11,12 +11,15 @@ const globalSlice = createSlice({
   reducers: {
     setAddSchduleItem(state, action) {
       state.scheduleItem.push(action.payload);
+    },
+    setClearSchduleItem(state) {
+      state.scheduleItem = [];
     }
   }
 });
 
 export const {
-  setAddSchduleItem
+  setAddSchduleItem, setClearSchduleItem
 } = globalSlice.actions;
 
 export default globalSlice.reducer;
