@@ -1,36 +1,26 @@
-import { format } from 'date-fns';
-import React, { useCallback, useMemo, useState } from 'react';
-import { Button, FlatList, Text, TouchableOpacity, View } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import React, { useCallback, useMemo } from 'react';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 
+const one_day = 1000 * 60 * 60 * 24;
 const Menu1 = () => {
+  const today = new Date();
   const { scheduleItem } = useSelector((state) => state.global);
-  const displayDateList = useMemo(() => {
-    if (scheduleItem?.length === 0) {
-      return null;
-    }
-    const lists = {};
-    scheduleItem.map((v) => {
-      if (!lists[v.schd_from_time]) {
-        lists[v.schd_from_time] = { marked: true, dotColor: 'red', activeOpacity: 0 }
-        //   '2022-12-16': {selected: true, marked: true, selectedColor: 'blue'},
-        //   '2022-12-11': { marked: true },
-        //   '2022-12-18': {marked: true, dotColor: 'red', activeOpacity: 0},
-        //   '2022-12-19': {disabled: true, disableTouchEvent: true}
-      }
+  const copyedItems = useMemo(() => {
+    const arr = scheduleItem.slice();
+    return arr.sort((a, b) => {
+      const dateA = new Date(a.schd_from_time);
+      const dateB = new Date(b.schd_from_time);
+      return dateA - dateB;
     });
-    return lists;
   }, [scheduleItem]);
-  const [selectedDate, setSelectedDate] = useState(
-    format(new Date(), "yyyy-MM-dd"),
-  );
-  const [btnPushed, setBtnPushed] = useState(false);
-  const flatListRender = useCallback((e) => (
+  const flatListRender = useCallback((e) => {
+    const diffDayCnt = Math.trunc((today.getTime() - (new Date(copyedItems[e.index].schd_from_time)).getTime()) / one_day);
+    return (
     <View>
       <TouchableOpacity
         style={{
-          backgroundColor: '#FF123456',
+          backgroundColor: (diffDayCnt === 0) ? '#FFC19E' : (diffDayCnt > 0) ? '#B2CCFF' : '#FFB2D9',
           padding: 5,
           fontSize: 20,
           marginVertical: 8,
@@ -47,20 +37,27 @@ const Menu1 = () => {
             borderRadius: 10
           }}
         >
-          {scheduleItem[e.index].schd_title}
+          {copyedItems[e.index].schd_title}
+        </Text>
+        <Text
+          style={{
+            fontSize: 20,
+            marginHorizontal: 16,
+            color: 'white',
+          }}
+        >
+          {copyedItems[e.index].schd_from_time} / 
+          {` ${(diffDayCnt === 0) ? 'D-DAY' : `D${(diffDayCnt > 0) ? `+` : ``}${diffDayCnt}`}`}
         </Text>
       </TouchableOpacity>
     </View>
-  ), [scheduleItem]);
+  )}, [copyedItems, today]);
   return (
     <View>
-      <Button
-        title={(btnPushed) ? '눌렀소' : '안눌렀소'}
-        onPress={() => setBtnPushed((v) => !v)}
-      />
       <FlatList
-        data={scheduleItem}
+        data={copyedItems}
         renderItem={flatListRender}
+        bounces={false}
       />
     </View>
   );
