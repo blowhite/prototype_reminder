@@ -2,11 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View, FlatList, Button } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import initDatabaseConfig from '../../function/database/InitDataBase';
 import { setAddSchduleItem } from '../../reducers/global';
 import { customStyles } from '../../style/baseStyles';
 
 const InsertItemForm = ({ itemProps, setItemProps }) => {
   const dispatch = useDispatch();
+  const localDB = useMemo(() => (initDatabaseConfig()), []);
   const editRef = useRef();
   const { scheduleItem } = useSelector((state) => state.global);
   const filteredList = useMemo(() => (
@@ -18,13 +20,45 @@ const InsertItemForm = ({ itemProps, setItemProps }) => {
   }, []);
   const sendDataBase = useCallback(() => {
     if (inputValue) {
-      dispatch(setAddSchduleItem({
-        schd_title: inputValue,
-        schd_from_time: itemProps.focusDate,
-      }));
-      setInputValue('');
-      editRef.current.blur();
-    }
+      localDB.transaction(tx => {
+        tx.executeSql(
+          `insert into tb_schdule (
+            schd_id,
+            schd_kind,
+            schd_title,
+            schd_content,
+            schd_from_time,
+            schd_to_time,
+            write_time,
+            update_time)
+           select 'WM' || 
+           substr('0000' ||  
+            cast(cast(ifnull(substr(max(schd_id), 3, 4), '0') as integer) + 1 as text)
+           , -4, 4) 
+                , 'unknown'
+                , '${inputValue}'
+                , NULL
+                , '${itemProps.focusDate}'
+                , NULL
+                , datetime('now','localtime')
+                , datetime('now','localtime')
+             from tb_schdule
+             returning schd_id
+           `,
+          [], (_, { rows }) => {
+            // console.log(rows);
+            dispatch(setAddSchduleItem({
+              schd_title: inputValue,
+              schd_from_time: itemProps.focusDate,
+            }));
+            setInputValue('');
+            editRef.current.blur();
+          }
+          );
+        }, (err) => {
+          console.log('check Error: ', err);
+        });
+      }
   }, [inputValue, itemProps]);
   const goBrowse = useCallback(() => {
     setItemProps({
