@@ -45,27 +45,23 @@ const LoadSettingForm = ({ setLoadSetting }) => {
   }, []);
   useEffect(() => {
     setLoadContent('데이터내용 체크중입니다.....');
-    checkTableList.map((v) => {
-      if (v.tbName === 'tb_schdule') {
-        localDB.transaction(tx => {
-          tx.executeSql(
-            `select * from ${v.tbName}`,
-            [], (_, { rows }) => {
-              console.log(rows);
-              if (rows.length !== 0) {
-                rows._array.map((x) => {
-                  dispatch(setAddSchduleItem({
-                    schd_title: x.schd_title,
-                    schd_from_time: x.schd_from_time,
-                  }));
-                })
-              }
-            }
-          );
-        }, (err) => {
-          console.log('check Error: ', err);
-        });
-      }
+    localDB.transaction(tx => {
+      tx.executeSql(
+        `select * from tb_schdule`,
+        [], (_, { rows }) => {
+          if (rows.length !== 0) {
+            rows._array.map((x) => {
+              dispatch(setAddSchduleItem({
+                schd_title: x.schd_title,
+                schd_from_time: x.schd_from_time,
+                id: schd_id,
+              }));
+            })
+          }
+        }
+      );
+    }, (err) => {
+      console.log('check Error: ', err);
     });
   }, []);
   useEffect(() => {

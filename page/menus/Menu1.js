@@ -14,44 +14,60 @@ const Menu1 = () => {
       return dateA - dateB;
     });
   }, [scheduleItem]);
+  const selectItem = useCallback((i) => () => {
+    copyedItems[i].checked = true;
+  }, [copyedItems]);
   const flatListRender = useCallback((e) => {
     const diffDayCnt = Math.trunc((today.getTime() - (new Date(copyedItems[e.index].schd_from_time)).getTime()) / one_day);
     return (
-    <View>
-      <TouchableOpacity
-        style={{
-          backgroundColor: (diffDayCnt === 0) ? '#FFC19E' : (diffDayCnt > 0) ? '#B2CCFF' : '#FFB2D9',
-          padding: 5,
-          fontSize: 20,
-          marginVertical: 8,
-          marginHorizontal: 16,
-          borderRadius: 10
-        }}
-      >
-        <Text
+      <View>
+        <TouchableOpacity
+          onPress={selectItem(e.index)}
           style={{
-            padding: 5,
+            backgroundColor: (diffDayCnt === 0) ? '#FFC19E' : (diffDayCnt > 0) ? '#B2CCFF' : '#FFB2D9',
+            padding: 2,
             fontSize: 20,
-            marginVertical: 8,
+            marginVertical: 4,
             marginHorizontal: 16,
             borderRadius: 10
           }}
         >
-          {copyedItems[e.index].schd_title}
-        </Text>
-        <Text
-          style={{
-            fontSize: 20,
-            marginHorizontal: 16,
-            color: 'white',
-          }}
-        >
-          {copyedItems[e.index].schd_from_time} / 
-          {` ${(diffDayCnt === 0) ? 'D-DAY' : `D${(diffDayCnt > 0) ? `+` : ``}${diffDayCnt}`}`}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  )}, [copyedItems, today]);
+          <Text
+            style={{
+              padding: 5,
+              fontSize: 20,
+              marginVertical: 4,
+              marginHorizontal: 16,
+              borderRadius: 10
+            }}
+          >
+            {copyedItems[e.index].schd_title}
+          </Text>
+          <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: "space-between" }}>
+            <Text
+              style={{
+                fontSize: 20,
+                marginHorizontal: 16,
+                color: 'white',
+              }}
+            >
+              {copyedItems[e.index].schd_from_time} /
+              {` ${(diffDayCnt === 0) ? 'D-DAY' : `D${(diffDayCnt > 0) ? `+` : ``}${diffDayCnt}`}`}
+            </Text>
+            <Text
+              style={{
+                fontSize: 20,
+                marginHorizontal: 16,
+                color: 'white',
+              }}
+            >
+              {(copyedItems[e.index].checked) ? '삭제대기' : ''}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }, [copyedItems, today]);
   return (
     <View>
       <FlatList

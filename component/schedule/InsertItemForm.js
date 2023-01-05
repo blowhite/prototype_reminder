@@ -43,13 +43,13 @@ const InsertItemForm = ({ itemProps, setItemProps }) => {
                 , datetime('now','localtime')
                 , datetime('now','localtime')
              from tb_schdule
-             returning schd_id
            `,
-          [], (_, { rows }) => {
-            // console.log(rows);
+          [], (tx, resultSet) => {
             dispatch(setAddSchduleItem({
               schd_title: inputValue,
               schd_from_time: itemProps.focusDate,
+              rowid: resultSet.insertId,
+              checked: false,
             }));
             setInputValue('');
             editRef.current.blur();
