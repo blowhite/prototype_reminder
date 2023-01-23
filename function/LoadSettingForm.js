@@ -54,7 +54,7 @@ const LoadSettingForm = ({ setLoadSetting }) => {
               dispatch(setAddSchduleItem({
                 schd_title: x.schd_title,
                 schd_from_time: x.schd_from_time,
-                id: schd_id,
+                // id: schd_id,
               }));
             })
           }
